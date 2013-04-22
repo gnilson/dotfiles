@@ -1,6 +1,6 @@
 (add-to-list 'load-path "~/.emacs.d")
 (add-to-list 'load-path "~/.emacs.d/calfw")
-
+(add-to-list 'custom-theme-load-path "~/.emacs.d")
 
 (defun vi-open-line-below ()
   "Insert a newline below the current line and put point at beginning."
@@ -8,7 +8,6 @@
   (unless (eolp)
     (end-of-line))
   (newline-and-indent))
-
 
 (global-set-key (kbd "C-c g") 'goto-line)
 (global-set-key (kbd "C-c c") 'compile)
@@ -20,7 +19,9 @@
 (global-set-key (kbd "C-c b") 'org-iswitchb)
 (global-set-key (kbd "C-o") 'vi-open-line-below)
 
+
 (setq column-number-mode t)
+(setq x-select-enable-clipboard t)
 ;; (global-set-key (kbd "C-/") 'undo)
 
 (custom-set-variables
@@ -48,14 +49,33 @@
 ;;(load-library “init_python”)
 
 ;;THIS ONE WORKS
+;;(require 'flymake)
 (require 'init_python)
+(add-hook 'python-mode-hook (quote (eldoc-mode (lambda nil (define-key python-mode-map (kbd "<tab>") (quote yas/expand))) imenu-add-menubar-index ropemacs-mode (lambda nil (hs-minor-mode 1)) (lambda nil (define-key python-mode-map "
+" (quote newline-and-indent))) wisent-python-default-setup my-python-hook)))
 
+
+(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+(autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+;;(autoload 'tuareg-imenu-set-imenu "tuareg-imenu" 
+;;  "Configuration of imenu for tuareg" t)
+
+(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+(setq auto-mode-alist 
+      (append '(("\\.ml[ily]?$" . tuareg-mode)
+		("\\.topml$" . tuareg-mode))
+	      auto-mode-alist))
+
+
+;; (require 'ruby-conf)
 
 ;;(require 'python-mode)
 ;;(require 'python)
 
 ;;(setq org-export-html-style-include-default f)
 (setq org-export-html-use-infojs t)
+(setq org-agenda-skip-scheduled-if-done t)
+
 
 (autoload 'multi-term "multi-term" nil t)
 (autoload 'multi-term-next "multi-term" nil t)
@@ -70,16 +90,12 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
-(add-hook 'python-mode-hook (quote (eldoc-mode (lambda nil (define-key python-mode-map (kbd "<tab>") (quote yas/expand))) imenu-add-menubar-index ropemacs-mode (lambda nil (hs-minor-mode 1)) (lambda nil (define-key python-mode-map "
-" (quote newline-and-indent))) wisent-python-default-setup my-python-hook)))
-
 
 
 (put 'downcase-region 'disabled nil)
 ;; (global-linum-mode 1)
 
-(blink-cursor-mode nil)
-
+(blink-cursor-mode -1)
 
 ;; (add-to-list 'load-path "~/.emacs.d/emacs-jabber")
 ;; (require 'jabber)
@@ -93,8 +109,8 @@
 ;;(load-theme 'zenburn)
 
 (when (display-graphic-p)
-    (load-theme 'tango)
-    (color-theme-tango)
+    (load-theme 'tango-2 t)
+    ;;(color-theme-tango-2 t)
     (tool-bar-mode -1))
 
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -104,8 +120,17 @@
   kept-new-versions 6
   kept-old-versions 2
   version-control t)
-
+(require 'graphviz-dot-mode)
 (require 'calfw-org)
+(setq cfw:fchar-junction ?╋
+      cfw:fchar-vertical-line ?┃
+      cfw:fchar-horizontal-line ?━
+      cfw:fchar-left-junction ?┣
+      cfw:fchar-right-junction ?┫
+      cfw:fchar-top-junction ?┯
+      cfw:fchar-top-left-corner ?┏
+      cfw:fchar-top-right-corner ?┓)
+
 
 ; WANDERLUST STUFF
 
